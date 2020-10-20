@@ -76,7 +76,7 @@ def PlotScatter(df, xvar, yvar):
           ylabel=labels_dict[yvar]
           )
     
-    fig.savefig(f'{title}.png', bbox_inches='tight')
+    fig.savefig(f'images/{title}.png', bbox_inches='tight')
                            
     return plt.show()
     
@@ -92,7 +92,7 @@ def PlotHist(df, xvar):
           xlabel=labels_dict[xvar],
           ylabel='Frequency'
           )
-    fig.savefig(f'{title}.png', bbox_inches='tight')
+    fig.savefig(f'images/{title}.png', bbox_inches='tight')
     return plt.show()
 
 def BaselineModel(df, y, xlist):
