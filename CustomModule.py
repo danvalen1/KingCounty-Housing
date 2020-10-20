@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib
 
 from statsmodels.formula.api import ols
 
@@ -76,7 +77,17 @@ def PlotScatter(df, xvar, yvar):
           ylabel=labels_dict[yvar]
           )
     
+#     plt.ticklabel_format(style='plain', axis='y')
+    
+    ax.get_xaxis().set_major_formatter(
+    matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    
+    ax.get_yaxis().set_major_formatter(
+    matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    
     fig.savefig(f'images/{title}.png', bbox_inches='tight')
+    
+    
                            
     return plt.show()
     
@@ -92,6 +103,17 @@ def PlotHist(df, xvar):
           xlabel=labels_dict[xvar],
           ylabel='Frequency'
           )
+    
+#     plt.ticklabel_format(style='plain', axis='x')
+    
+    ax.get_xaxis().set_major_formatter(
+    matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    
+    ax.get_yaxis().set_major_formatter(
+    matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    
+    plt.xticks(rotation=-45)
+    
     fig.savefig(f'images/{title}.png', bbox_inches='tight')
     return plt.show()
 
