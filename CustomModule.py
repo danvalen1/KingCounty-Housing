@@ -35,32 +35,23 @@ labels_dict = {'id': 'House ID',
              'yr_renovated': 'Year When Renovated', 
              'sqft_living15': 'Square Footage of Living Area for Neighbors',
              'sqft_lot15': 'Square Footage of Land Lot for Neighbors',
-             'cost': 'Cost of Building House ($)'
+             'cost': 'Cost of Building House ($)',
+             'space_x_grade': 'Grade per sq ft'
               }
 
-def LoadHousingData():
+def LoadHousingData(varlist):
     # Read in targetcsv as Pandas df
     df = pd.read_csv('dsc-phase-2-project/data/kc_house_data.csv')
     
     # Drop unnecessary columns
-    drop_cols = ['date',
-             'view',
-             'sqft_above',
-             'sqft_basement',
-             'yr_renovated', 
-             'sqft_living15',
-             'sqft_lot15']
-
-    df.drop(columns=drop_cols,inplace=True)
+    df = df[varlist]
     
-    # If waterfront is in variables replace NaN with 0s since low number of waterfront properties
-    if df['waterfront'].any():
-        df['waterfront'].fillna(0, inplace=True)
-        
-    # Generate cost columns assuming 
-    df['cost'] = [x*153 for x in df['sqft_living']]
+    # Generate QOL variable
+    df['space_x_grade'] = df['grade']*df['sqft_living']
     
-    return df
+    split_dfs = {'X_train':, 'X_test':, 'y_train', 'y_test'}
+    
+    return split_df
 
 
 def PlotScatter(df, xvar, yvar):
@@ -91,13 +82,14 @@ def PlotScatter(df, xvar, yvar):
                            
     return plt.show()
     
-def PlotHist(df, xvar):
+def PlotHist(df, xvar, bins):
     title = f'Frequency of {labels_dict[xvar]}'
     
     fig, ax = plt.subplots(figsize=figsize)
     
     sns.histplot(data=df,
-                x=xvar)
+                x=xvar,
+                bins=bins)
     
     ax.set(title=title,
           xlabel=labels_dict[xvar],
@@ -133,3 +125,10 @@ def BaselineModel(df, y, xlist):
     return print(f'R-squared = {score}',
                  '\n',
                  f'RMSE = {dummy_rmse}')
+
+
+def Linreg(df, y, xlist):
+    formula = f'{y}~' + "+".join(xlist)
+    king_model = ols(formula=formula, data = df).fit()
+    return king_model.summary()
+    
