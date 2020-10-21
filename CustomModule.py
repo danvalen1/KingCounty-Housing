@@ -39,19 +39,25 @@ labels_dict = {'id': 'House ID',
              'space_x_grade': 'Grade per sq ft'
               }
 
+
+
 def LoadHousingData(varlist):
+    
+
     # Read in targetcsv as Pandas df
     df = pd.read_csv('dsc-phase-2-project/data/kc_house_data.csv')
     
     # Drop unnecessary columns
     df = df[varlist]
+    train_set, test_set = train_test_split(df, test_size = .2, random_state = 5)
     
     # Generate QOL variable
     df['space_x_grade'] = df['grade']*df['sqft_living']
     
-    split_dfs = {'X_train':, 'X_test':, 'y_train', 'y_test'}
+    split_dfs = {'df': df 'train_set': train_set, 'test_set':, test_set}
     
-    return split_df
+    return split_dfs
+
 
 
 def PlotScatter(df, xvar, yvar):
@@ -68,7 +74,6 @@ def PlotScatter(df, xvar, yvar):
           ylabel=labels_dict[yvar]
           )
     
-#     plt.ticklabel_format(style='plain', axis='y')
     
     ax.get_xaxis().set_major_formatter(
     matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
@@ -96,7 +101,6 @@ def PlotHist(df, xvar, bins):
           ylabel='Frequency'
           )
     
-#     plt.ticklabel_format(style='plain', axis='x')
     
     ax.get_xaxis().set_major_formatter(
     matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
