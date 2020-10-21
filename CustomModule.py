@@ -38,6 +38,11 @@ labels_dict = {'id': 'House ID',
              'cost': 'Cost of Building House ($)'
               }
 
+def test_split(data):
+    train_set, test_set = train_test_split(king, test_size = .2, random_state = 5)
+    return train_set, test_set
+
+
 def LoadHousingData():
     # Read in targetcsv as Pandas df
     df = pd.read_csv('dsc-phase-2-project/data/kc_house_data.csv')
@@ -59,6 +64,9 @@ def LoadHousingData():
         
     # Generate cost columns assuming 
     df['cost'] = [x*153 for x in df['sqft_living']]
+    
+    
+    
     
     return df
 
