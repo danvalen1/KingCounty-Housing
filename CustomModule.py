@@ -15,6 +15,7 @@ from yellowbrick.regressor import ResidualsPlot
 
 # Setting global variables
 
+dpi = 300
 figsize = (20,16)
 fontscale = 1.75
 sns.set(font_scale = fontscale, style = 'whitegrid')
@@ -206,6 +207,13 @@ def Linreg(df):
     
     X = sm.tools.tools.add_constant(X)
     king_model = sm.OLS(y, X).fit()
+    
+    plt.rc('figure', figsize=(12, 7))
+    #plt.text(0.01, 0.05, str(model.summary()), {'fontsize': 12}) old approach
+    plt.text(0.01, 0.05, str(king_model.summary()), {'fontsize': 10}, fontproperties = 'monospace') # approach improved by OP -> monospace!
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig('images/OLSLinReg.png', bbox_inches='tight')
     return king_model.summary()
 
 def CorrHeatmap(df):
@@ -215,7 +223,7 @@ def CorrHeatmap(df):
     return fig.show()
     
 def Resid(df):
-    fig, ax = plt.subplots(figsize=(10,8))
+    fig, ax = plt.subplots(figsize=(10,8), dpi=dpi)
 
     X_train = df['train_set'].drop(labels='price', axis=1)
     y_train = df['train_set'].price
@@ -227,7 +235,7 @@ def Resid(df):
     
     
     # Instantiate the linear model and visualizer
-    model = LinearRegression()
+    model = LinearRegression(fit_intercept=True)
     
 
     visualizer = ResidualsPlot(model)
@@ -244,5 +252,5 @@ def Resid(df):
     
     plt.xticks(rotation=-45)
     
-    fig.savefig(f'images/Residuals.png', bbox_inches='tight')
+    fig.savefig(f'images/Residuals.png', dpi=dpi, bbox_inches='tight')
     return visualizer.show()
