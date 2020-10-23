@@ -1,4 +1,4 @@
-# Predicting Husing Prices for King County Housing Authority
+# Predicting Housing Prices for King County Housing Authority
 **Authors**: Eon Slemp, Dan Valenzuela
 
 ## Repository Structure
@@ -48,7 +48,7 @@ Our final model shows that it is possible to account for 57.2\% of the variance 
 
 However, this model also shows that the `grade` categories may be less statistically-significant than previously thought. This will require more investigation as a scatter plot of this model of `price` v. `sqft_per_occupant` including `grade` as a hue shows that there appears to be a relationship with `grade` that this model does not account for.
 
-Generally the model shows that for each additional bedroom the price of a house increases by approximately \\$75,000; that for each additional square foot of living space per occupant increases the price by approximately $500; and that urban houses are almost twice as expensive as suburban houses.
+Generally the model shows that for each additional bedroom the price of a house increases by approximately \$75,000; that for each additional square foot of living space per occupant increases the price by approximately $500; and that urban houses are almost twice as expensive as suburban houses.
 
 ## Evaluation
 The model produced on the training set does almost just as well with the test set with R-squared values being approximately equal and residuals being similar. However, looking at the residuals against the predicted values, one sees that the variance in residuals increases as `price` increases, meaning this model is heteroskedastic. 
@@ -64,3 +64,5 @@ Thihis model can be improved by providing additional transformations to the `gra
 
 Further, the features of this model can be scaled to better compare the comparative effect of the variables on `price`. 
 
+
+![graph](https://github.com/danvalen1/KingCounty-Housing/blob/main/images/Sale%20Price%20(%24)%20v.%20Square%20Footage%20of%20Living%20Area%20per%20Bedroom%0A%20Colored%20By%20Grade%20Category.png)
