@@ -58,7 +58,7 @@ def LoadHousingData(varlist, clean=False):
     """
 
     # Read in targetcsv as Pandas df
-    df = pd.read_csv('dsc-phase-2-project/data/kc_house_data.csv')
+    df = pd.read_csv('data/kc_house_data.csv')
     
     # Drop unnecessary columns
     df = df[varlist]

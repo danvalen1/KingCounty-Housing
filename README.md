@@ -10,7 +10,7 @@
 ├── CustomLibrary.py                    <- Module of function used in analysis
 ├── images                              <- Both sourced externally and generated from code
 ├── notebooks                           <- Noteboooks used to build Walkthrough
-└── dsc-phase-2-project                 <- Templates referenced in building project, including kc_house_data.csv
+└── data                                <- kc_house_data.csv
 ```
 
 
