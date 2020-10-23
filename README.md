@@ -64,5 +64,3 @@ Thihis model can be improved by providing additional transformations to the `gra
 
 Further, the features of this model can be scaled to better compare the comparative effect of the variables on `price`. 
 
-<center><img src="images/Sale Price ($) v. Square Footage of Living Area per Bedroom
- Colored By Grade Category.png" width=600></center>
