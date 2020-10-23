@@ -64,5 +64,4 @@ Thihis model can be improved by providing additional transformations to the `gra
 
 Further, the features of this model can be scaled to better compare the comparative effect of the variables on `price`. 
 
-![graph](/images/Sale Price\ ($)\ v.\ Square\ Footage\ of\ Living\ Area\ per\ Bedroom\
- Colored\ By\ Grade\ Category.png)
+![graph](https://github.com/danvalen1/KingCounty-Housing/blob/main/images/Sale%20Price%20(%24)%20v.%20Square%20Footage%20of%20Living%20Area%20per%20Bedroom%0A%20Colored%20By%20Grade%20Category.png)
