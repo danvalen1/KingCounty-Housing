@@ -16,10 +16,10 @@ from yellowbrick.regressor import ResidualsPlot
 # Setting global variables
 
 dpi = 300
-figsize = (20,16)
-fontscale = 1.75
+figsize = (5, 4)
+fontscale = .8
 sns.set(font_scale = fontscale, style = 'whitegrid')
-markersize = 150
+markersize = 75
 
 
 labels_dict = {'id': 'House ID',
@@ -51,6 +51,11 @@ labels_dict = {'id': 'House ID',
 
 
 def LoadHousingData(varlist, clean=False):
+    """Load the King County housing data into a pandas data frame.
+        Specify the variables of interest passing a list of strings as `varlist`. 
+        Specify whether raw data is used by passing a boolean value through `clean`. 
+        A True value means that the data preparation used for our analysis is used. Note that when clean=True a dictionary of dataframe is returned, not a dataframe itself.
+    """
 
     # Read in targetcsv as Pandas df
     df = pd.read_csv('dsc-phase-2-project/data/kc_house_data.csv')
@@ -75,9 +80,9 @@ def LoadHousingData(varlist, clean=False):
 
         bin_names = ['urban', 'suburban', 'rural']
 
-        df['sqft_lot'] = pd.cut(df['sqft_lot'], bins, labels = bin_names)
+        df['sqft_lot_transform'] = pd.cut(df['sqft_lot'], bins, labels = bin_names)
 
-        lot_dummies = pd.get_dummies(df.sqft_lot).iloc[:,:2]
+        lot_dummies = pd.get_dummies(df.sqft_lot_transform).iloc[:,:2]
 
         df = pd.concat([df, lot_dummies], axis = 1)
         
@@ -85,21 +90,19 @@ def LoadHousingData(varlist, clean=False):
         # Train-test split
         train_set, test_set = train_test_split(df, test_size = .2, random_state = 5)
                 
-        train_set = train_set.drop(['date', 
-                      'bathrooms', 
+        train_set = train_set.drop([
                       'sqft_living', 
                       'grade', 
                       'sqft_lot', 
-                      'space_x_grade', 
-                      'yr_built'], axis=1)
+                      'space_x_grade',
+                        'sqft_lot_transform'], axis=1)
         
-        test_set = test_set.drop(['date', 
-                      'bathrooms', 
+        test_set = test_set.drop([
                       'sqft_living', 
                       'grade', 
                       'sqft_lot', 
-                      'space_x_grade', 
-                      'yr_built'], axis=1)
+                      'space_x_grade',
+        'sqft_lot_transform'], axis=1)
 
 
         split_dfs = {'df': df, 'train_set': train_set, 'test_set': test_set} 
@@ -107,27 +110,37 @@ def LoadHousingData(varlist, clean=False):
         return split_dfs
     
     else:
-        return df
+        # Train-test split
+        train_set, test_set = train_test_split(df, test_size = .2, random_state = 5)
+        split_dfs = {'df': df, 'train_set': train_set, 'test_set': test_set} 
+        return split_dfs
 
 def PlotScatter(df, xvar, yvar, hue=None):
+    """Plots a scatter of `xvar` and `yvar` in df. A hue can be added through `hue`. 
+    """
     title = f'{labels_dict[yvar]} v. {labels_dict[xvar]}'
     
-    fig, ax = plt.subplots(figsize=figsize)
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
                       
     scatter = sns.scatterplot(x=xvar,
                     y=yvar,
                     data=df,
                     hue=hue,
                     palette="Spectral",
-                    s=markersize
+                    s=markersize,
+                    alpha = .3
                    )
+    if hue:
+        ax.legend([hue])
+        ax.legend(markerscale=1.5)
+        title = f'{labels_dict[yvar]} v. {labels_dict[xvar]}\n Colored By {hue.title()} Category'
     
     ax.set(title=f'{title}',
           xlabel=labels_dict[xvar],
           ylabel=labels_dict[yvar]
           )
-    if hue:
-        ax.legend(markerscale=3)
+    
+    
         
     ax.get_xaxis().set_major_formatter(
     matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
@@ -135,14 +148,20 @@ def PlotScatter(df, xvar, yvar, hue=None):
     ax.get_yaxis().set_major_formatter(
     matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
     
+    if xvar=='sqft_lot':
+        plt.xticks(rotation=-45)
+    
     fig.savefig(f'images/{title}.png', bbox_inches='tight')
                         
     return plt.show()
     
 def PlotHist(df, xvar, bins):
+    """Plot a histogram with automatic labels provided in a global dict in CustomModule. 
+        Pass a dataframe through `df`, a string through `xvar`, and the number of bins through `bins`.
+    """
     title = f'Frequency of {labels_dict[xvar]}'
     
-    fig, ax = plt.subplots(figsize=figsize)
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     
     sns.histplot(data=df,
                 x=xvar,
@@ -166,6 +185,9 @@ def PlotHist(df, xvar, bins):
     return plt.show()
 
 def BaselineModel(df, y):
+    """Uses a dataframe with dependent and independent variables (y) to generate
+    R-squared and RMSE values for a dummy regression using scikit-learn
+    """
     X_train = df.drop(labels=y, axis=1)
     y_train = df[y]
     dummy = DummyRegressor()  # by default this will use the mean
@@ -184,6 +206,9 @@ def BaselineModel(df, y):
 
 
 def Models(df, y):
+    """Uses a dataframe with dependent and independent variables (y) to generate
+    R-squared and RMSE values for a linear regression using scikit-learn
+    """
     X_train = df.drop(labels=y, axis=1)
     y_train = df[y]
     model = LinearRegression()  # by default this will use the mean
@@ -202,28 +227,29 @@ def Models(df, y):
 
 
 def Linreg(df):
+    """Uses a dataframe with dependent and independent variable `price` to generate
+    R-squared and RMSE values for a linear regression using statsmodels.
+    """
     X = df.drop(labels='price', axis=1)
     y = df.price
     
     X = sm.tools.tools.add_constant(X)
     king_model = sm.OLS(y, X).fit()
     
-    plt.rc('figure', figsize=(12, 7))
-    #plt.text(0.01, 0.05, str(model.summary()), {'fontsize': 12}) old approach
-    plt.text(0.01, 0.05, str(king_model.summary()), {'fontsize': 10}, fontproperties = 'monospace') # approach improved by OP -> monospace!
-    plt.axis('off')
-    plt.tight_layout()
-    plt.savefig('images/OLSLinReg.png', bbox_inches='tight')
     return king_model.summary()
 
 def CorrHeatmap(df):
-    fig, ax = plt.subplots(figsize=(40,32))
+    """Generates a correlation heatmap from a dataframe with variables of interest.
+    """
+    fig, ax = plt.subplots(figsize=(10,8), dpi=150)
     sns.heatmap(df.corr(), cmap='bwr', center=0, annot=True)
     fig.savefig(f'images/CorrHeatmap.png', bbox_inches='tight')
     return fig.show()
     
 def Resid(df):
-    fig, ax = plt.subplots(figsize=(10,8), dpi=dpi)
+    """Generates a residual plot using a dictionary containing a test set and training set.
+    """
+    fig, ax = plt.subplots(figsize=(10,8), dpi=150)
 
     X_train = df['train_set'].drop(labels='price', axis=1)
     y_train = df['train_set'].price
