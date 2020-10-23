@@ -1,4 +1,4 @@
-# Predicting Husing Prices for King County Housing Authority
+# Predicting Housing Prices for King County Housing Authority
 **Authors**: Eon Slemp, Dan Valenzuela
 
 ## Repository Structure
